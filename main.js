@@ -50,3 +50,4 @@ var server = http
     res.end(content, "utf-8");
   })
   .listen(8000); // ポート競合の場合は値を変更
+console.log("サーバを起動しました");
