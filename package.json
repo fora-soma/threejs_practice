@@ -1,12 +1,29 @@
 {
   "name": "threejs_practrice",
   "version": "1.0.0",
-  "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "nodemon main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fora-soma/threejs_practice.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fora-soma/threejs_practice/issues"
+  },
+  "homepage": "https://github.com/fora-soma/threejs_practice#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
