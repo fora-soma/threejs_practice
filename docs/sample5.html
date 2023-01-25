@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://unpkg.com/three@0.131.3/build/three.min.js"></script>
+    <script>
+      // ページの読み込みを待つ
+      window.addEventListener("load", init);
+
+      function init() {
+        // サイズを指定
+        const width = 960;
+        const height = 540;
+
+        // レンダラーを作成
+        const renderer = new THREE.WebGLRenderer({
+          canvas: document.querySelector("#myCanvas"),
+          alpha: true,
+        });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(width, height);
+
+        // シーンを作成
+        const scene = new THREE.Scene();
+
+        // カメラを作成
+        const camera = new THREE.PerspectiveCamera(45, width / height);
+        camera.position.set(0, 0, +20);
+
+        // 図形を作成
+        const geometry = new THREE.PlaneGeometry(160, 90);
+
+        // videoを読み込む
+        const video = document.getElementById("myVideo");
+        const texture = new THREE.VideoTexture(video);
+
+        // マテリアルにテクスチャを設定
+        const material = new THREE.MeshBasicMaterial({
+          side: THREE.DoubleSide,
+          map: texture,
+        });
+        const plane = new THREE.Mesh(geometry, material);
+        plane.position.set(0, 0, -100);
+
+        // 図形を作成
+        const geometry2 = new THREE.PlaneGeometry(16, 9);
+
+        // 画像を読み込む
+        const loader = new THREE.TextureLoader();
+        const texture2 = loader.load("imgs/image1.jpg");
+        // マテリアルにテクスチャーを設定
+        const material2 = new THREE.MeshBasicMaterial({
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.5,
+          color: 0xff00ff,
+        });
+        const plane2 = new THREE.Mesh(geometry2, material2);
+
+        scene.add(plane);
+        scene.add(plane2);
+
+        tick();
+
+        // 毎フレーム時に実行されるループイベントです
+        function tick() {
+          const posX = parseInt(document.getElementById("posX").value);
+          const posY = parseInt(document.getElementById("posY").value);
+          const posZ = parseInt(document.getElementById("posZ").value);
+
+          const rotX =
+            (parseInt(document.getElementById("rotX").value) * Math.PI) / 180;
+          const rotY =
+            (parseInt(document.getElementById("rotY").value) * Math.PI) / 180;
+          const rotZ =
+            (parseInt(document.getElementById("rotZ").value) * Math.PI) / 180;
+
+          plane2.position.set(posX, posY, posZ);
+          plane2.rotation.set(rotX, rotY, rotZ);
+
+          renderer.render(scene, camera); // レンダリング
+
+          requestAnimationFrame(tick);
+        }
+      }
+    </script>
+    <style>
+      #container {
+        display: flex;
+      }
+      #myVideo {
+        visibility: hidden;
+        width: 0;
+        position: absolute;
+      }
+      #rangeContainer {
+        display: flex;
+        flex-flow: column;
+      }
+      #rangeContainer input[range] {
+        flex: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <canvas id="myCanvas"></canvas>
+      <div id="rangeContainer">
+        <div>
+          <label for="posX">POS X:</label
+          ><input
+            id="posX"
+            label="posX"
+            type="range"
+            min="-24"
+            max="24"
+            list="tickmarks"
+            name="posX"
+            oninput="(e)=>{inputChangeHandler(e)}"
+          />
+          <span id="posX_val" />
+        </div>
+        <div>
+          <label for="posY">POS Y:</label
+          ><input
+            id="posY"
+            label="posY"
+            type="range"
+            min="-16"
+            max="16"
+            list="tickmarks"
+          />
+          <span id="posY_val" />
+        </div>
+        <div>
+          <label for="posZ">POS Z:</label
+          ><input
+            id="posZ"
+            label="posZ"
+            type="range"
+            min="-100"
+            max="100"
+            list="tickmarks"
+          />
+          <span id="posZ_val" />
+        </div>
+        <div>
+          <label for="rotX">ROT X:</label
+          ><input
+            id="rotX"
+            label="rotX"
+            type="range"
+            min="-180"
+            max="180"
+            list="tickmarks2"
+          />
+          <span id="rotX_val" />
+        </div>
+        <div>
+          <label for="rotY">ROT Y:</label
+          ><input
+            id="rotY"
+            label="rotY"
+            type="range"
+            min="-180"
+            max="180"
+            list="tickmarks2"
+          />
+          <span id="rotY_val" />
+        </div>
+        <div>
+          <label for="rotZ">ROT Z:</label
+          ><input
+            id="rotZ"
+            label="rotZ"
+            type="range"
+            min="-180"
+            max="180"
+            list="tickmarks2"
+          />
+          <span id="rotZ_val" />
+        </div>
+      </div>
+    </div>
+    <video
+      id="myVideo"
+      src="imgs/video.mp4"
+      controls
+      muted
+      autoplay
+      playsinline
+      loop
+    ></video>
+    <script>
+      [...document.querySelectorAll("input[type=range]")].map((inputNode) => {
+        inputNode.addEventListener("input", (e) => {
+          const id = e.target.id;
+          document.querySelector(`span#${id}_val`).textContent = e.target.value;
+        });
+        inputNode.dispatchEvent(new Event("input", { bubbles: true }));
+        // console.log(inputNode);
+      });
+    </script>
+  </body>
+</html>
